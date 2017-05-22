@@ -1,0 +1,45 @@
+body {
+    background: url(../images/background.png);
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+}
+
+body * {
+    position: absolute;
+    margin: 0px;
+    padding: 0px;
+}
+
+airport {
+    background-image: url(../images/airport0.png);
+    width: 379px;
+    height: 224px;
+}
+
+name {
+    font-family: 'Open Sans', sans-serif;
+    color:white;
+    -webkit-text-stroke: 0.5px black;
+    font-size : 35px;
+}
+
+plane {
+    z-index: 1;
+    background-image: url(../images/plane.png);
+    width: 39px;
+    height: 66px;
+}
+
+box {
+    background-image: url(../images/box.png);
+    width: 49px;
+    height: 31px;
+}
+
+::selection {
+  background: transparent; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+  background: transparent; /* Gecko Browsers */
+}
