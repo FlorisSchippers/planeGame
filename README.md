@@ -1,9 +1,9 @@
 # planeGame
 
 ## Instructies
-Typescript game door middel van een singleton, een static utils class, een interface en strategy patterns
-Assesser kan een fork maken en deze pullen om lokaal de ts files te compilen naar js
-Vervolgens zullen deze in de docs folder te vinden zijn om te runnen in de browser
+- Typescript game door middel van een singleton, een static utils class, een interface en strategy patterns
+- Assesser kan een fork maken en deze pullen om lokaal de ts files te compilen naar js
+- Vervolgens zullen deze in de docs folder te vinden zijn om te runnen in de browser
 
 
 ## Klassendiagram
