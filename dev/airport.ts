@@ -12,8 +12,7 @@ class Airport extends GameObject {
 
     public upgrade(): void {
         // Change airport texture on click for demonstration
-        if (this.stage == 5) {
-        } else {
+        if (this.stage != 5) {
             this.stage++;
         }
         switch (this.stage) {
