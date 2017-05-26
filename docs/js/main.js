@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var GameObject = (function () {
     function GameObject(parent, name, width, height, x, y) {
         this.elementname = name;
@@ -26,9 +31,10 @@ var GameObject = (function () {
 var Airport = (function (_super) {
     __extends(Airport, _super);
     function Airport(name, x, y) {
-        _super.call(this, document.body, "airport", 0, 0, x, y);
-        this.stage = 0;
-        this.name = new Name(document.body, name, x + 275, y + 125);
+        var _this = _super.call(this, document.body, "airport", 0, 0, x, y) || this;
+        _this.stage = 0;
+        _this.name = new Name(document.body, name, x + 275, y + 125);
+        return _this;
     }
     Airport.prototype.upgrade = function () {
         if (this.stage != 5) {
@@ -72,9 +78,10 @@ var Airport = (function (_super) {
 var Box = (function (_super) {
     __extends(Box, _super);
     function Box(name, randomAirport) {
-        _super.call(this, document.body, "box", 49, 31, randomAirport.x + 237, randomAirport.y + 170);
-        this.randomAirport = randomAirport;
-        this.name = new Name(document.body, name, this.randomAirport.x + 250, this.randomAirport.y + 165);
+        var _this = _super.call(this, document.body, "box", 49, 31, randomAirport.x + 237, randomAirport.y + 170) || this;
+        _this.randomAirport = randomAirport;
+        _this.name = new Name(document.body, name, _this.randomAirport.x + 250, _this.randomAirport.y + 165);
+        return _this;
     }
     return Box;
 }(GameObject));
@@ -193,22 +200,24 @@ window.addEventListener("load", function () {
 var Name = (function (_super) {
     __extends(Name, _super);
     function Name(parent, name, x, y) {
-        _super.call(this, parent, "name", 20, 50, x, y);
-        this.text = name;
-        this.div.innerHTML = this.text;
+        var _this = _super.call(this, parent, "name", 20, 50, x, y) || this;
+        _this.text = name;
+        _this.div.innerHTML = _this.text;
+        return _this;
     }
     return Name;
 }(GameObject));
 var Plane = (function (_super) {
     __extends(Plane, _super);
     function Plane() {
-        _super.call(this, document.body, "plane", 39, 66, window.innerWidth / 2, window.innerHeight / 2);
-        this.speed = 5;
-        this.angle = 0;
-        this.keyState = {};
-        this.behavior = new Empty(this);
-        window.addEventListener('keydown', this.KeyDown.bind(this));
-        window.addEventListener('keyup', this.KeyUp.bind(this));
+        var _this = _super.call(this, document.body, "plane", 39, 66, window.innerWidth / 2, window.innerHeight / 2) || this;
+        _this.speed = 5;
+        _this.angle = 0;
+        _this.keyState = {};
+        _this.behavior = new Empty(_this);
+        window.addEventListener('keydown', _this.KeyDown.bind(_this));
+        window.addEventListener('keyup', _this.KeyUp.bind(_this));
+        return _this;
     }
     Plane.prototype.KeyDown = function (e) {
         this.keyState[e.keyCode || e.which] = true;
