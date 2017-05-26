@@ -31,9 +31,7 @@ var Airport = (function (_super) {
         this.name = new Name(document.body, name, x + 275, y + 125);
     }
     Airport.prototype.upgrade = function () {
-        if (this.stage == 5) {
-        }
-        else {
+        if (this.stage != 5) {
             this.stage++;
         }
         switch (this.stage) {
@@ -153,19 +151,28 @@ var Game = (function () {
         this.plane.update();
         this.boxes.forEach(function (box) {
             if (Utils.collision(_this.plane, box)) {
-                _this.plane.behavior = new Carrying(_this.plane, box);
-                box.name.div.remove();
-                box.div.remove();
+                if (_this.plane.behavior instanceof Empty) {
+                    _this.plane.behavior = new Carrying(_this.plane, box);
+                    box.name.div.remove();
+                    box.div.remove();
+                    _this.boxes.splice(0, 1);
+                }
             }
         });
         this.airports.forEach(function (airport) {
             if (Utils.collision(_this.plane, airport.name)) {
                 if (_this.plane.behavior instanceof Carrying) {
                     if (_this.plane.behavior.box.name.text == airport.name.text) {
-                        airport.upgrade();
                         _this.plane.behavior = new Empty(_this.plane);
+                        airport.upgrade();
                         _this.score++;
-                        _this.boxes.push(new Box(Math.ceil(Math.random() * 10) + "", _this.airports[Math.floor(Math.random() * _this.airports.length)]));
+                        var randomAirport = _this.airports[Math.floor(Math.random() * _this.airports.length)];
+                        console.log(airport);
+                        console.log(randomAirport);
+                        while (airport == randomAirport) {
+                            randomAirport = _this.airports[Math.floor(Math.random() * _this.airports.length)];
+                        }
+                        _this.boxes.push(new Box(Math.ceil(Math.random() * 10) + "", randomAirport));
                     }
                 }
             }

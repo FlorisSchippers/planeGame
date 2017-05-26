@@ -27,19 +27,28 @@ class Game {
         this.plane.update();
         this.boxes.forEach(box => {
             if (Utils.collision(this.plane, box)) {
-                this.plane.behavior = new Carrying(this.plane, box);
-                box.name.div.remove();
-                box.div.remove();
+                if (this.plane.behavior instanceof Empty) {
+                    this.plane.behavior = new Carrying(this.plane, box);
+                    box.name.div.remove();
+                    box.div.remove();
+                    this.boxes.splice(0, 1);
+                }
             }
         });
         this.airports.forEach(airport => {
             if (Utils.collision(this.plane, airport.name)) {
                 if (this.plane.behavior instanceof Carrying) {
                     if (this.plane.behavior.box.name.text == airport.name.text) {
-                        airport.upgrade();
                         this.plane.behavior = new Empty(this.plane);
+                        airport.upgrade();
                         this.score++;
-                        this.boxes.push(new Box(Math.ceil(Math.random() * 10) + "", this.airports[Math.floor(Math.random() * this.airports.length)]));
+                        let randomAirport = this.airports[Math.floor(Math.random() * this.airports.length)];
+                        console.log(airport);
+                        console.log(randomAirport);
+                        while (airport == randomAirport) {
+                            randomAirport = this.airports[Math.floor(Math.random() * this.airports.length)];
+                        }
+                        this.boxes.push(new Box(Math.ceil(Math.random() * 10) + "", randomAirport));
                     }
                 }
             }
