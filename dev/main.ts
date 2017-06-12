@@ -1,18 +1,19 @@
 /// <reference path="game.ts"/>
+/// <reference path="tween.d.ts"/>
 
 var title: HTMLElement;
-var button: HTMLElement;
+var start: HTMLElement;
 
 window.addEventListener("load", function () {
     title = document.createElement("title");
-    title.innerHTML = "planeGame!";
     document.body.appendChild(title);
-    button = document.createElement("button");
-    button.innerHTML = "Start!"
-    button.addEventListener("click", function () {
+    start = document.createElement("start");
+    start.addEventListener("click", function () {
         title.remove();
-        button.remove();
+        start.remove();
         Game.getInstance();
     });
-    document.body.appendChild(button);
+    document.body.appendChild(start);
+    TweenLite.to(title, 1, { x: 0, y: 250, ease: Bounce.easeOut });
+    TweenLite.to(start, 1, { x: 0, y: 500, ease: Bounce.easeOut });
 });

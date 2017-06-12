@@ -7,20 +7,43 @@ body {
 
 body * {
     position: absolute;
+    display: block;
     margin: 0px;
     padding: 0px;
 }
 
 title {
-    width:664px;
-    height:151px;
+    width: 585px;
+    height: 169px;
+    margin: auto;
     background-image: url('../images/title.png');
+    left: calc(100% / 2 - 290px);
 }
 
-button {
-    width:345px;
-    height:131px;
-    background-image: url('../images/button.png');
+start {
+    width: 284px;
+    height: 145px;
+    margin: auto;
+    background-image: url('../images/start.png');
+    left: calc(100% / 2 - 140px);
+}
+
+score {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 50px;
+    color: white;
+    text-shadow: 3px 3px black;
+    left: 10px;
+    top: 5px;
+}
+
+time {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 25px;
+    color: white;
+    text-shadow: 3px 3px black;
+    left: 10px;
+    top: 75px;
 }
 
 airport {

@@ -1,8 +1,13 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var GameObject = (function () {
     function GameObject(parent, name, width, height, x, y) {
         this.elementname = name;
@@ -26,9 +31,10 @@ var GameObject = (function () {
 var Airport = (function (_super) {
     __extends(Airport, _super);
     function Airport(name, x, y) {
-        _super.call(this, document.body, "airport", 0, 0, x, y);
-        this.stage = 0;
-        this.name = new Name(document.body, name, x + 275, y + 125);
+        var _this = _super.call(this, document.body, "airport", 0, 0, x, y) || this;
+        _this.stage = 0;
+        _this.name = new Name(document.body, name, x + 275, y + 125);
+        return _this;
     }
     Airport.prototype.upgrade = function () {
         if (this.stage != 5) {
@@ -72,9 +78,10 @@ var Airport = (function (_super) {
 var Box = (function (_super) {
     __extends(Box, _super);
     function Box(name, randomAirport) {
-        _super.call(this, document.body, "box", 49, 31, randomAirport.x + 237, randomAirport.y + 170);
-        this.randomAirport = randomAirport;
-        this.name = new Name(document.body, name, this.randomAirport.x + 250, this.randomAirport.y + 165);
+        var _this = _super.call(this, document.body, "box", 49, 31, randomAirport.x + 237, randomAirport.y + 170) || this;
+        _this.randomAirport = randomAirport;
+        _this.name = new Name(document.body, name, _this.randomAirport.x + 250, _this.randomAirport.y + 165);
+        return _this;
     }
     return Box;
 }(GameObject));
@@ -127,19 +134,25 @@ var Empty = (function () {
 }());
 var Enums;
 (function (Enums) {
+    var Keys;
     (function (Keys) {
         Keys[Keys["W"] = 87] = "W";
         Keys[Keys["A"] = 65] = "A";
         Keys[Keys["D"] = 68] = "D";
-    })(Enums.Keys || (Enums.Keys = {}));
-    var Keys = Enums.Keys;
+    })(Keys = Enums.Keys || (Enums.Keys = {}));
 })(Enums || (Enums = {}));
 var Game = (function () {
     function Game() {
         var _this = this;
         this.score = 0;
+        this.time = 60;
+        this.timeCounter = 0;
         this.airports = [];
         this.boxes = [];
+        this.scoreElement = document.createElement("score");
+        document.body.appendChild(this.scoreElement);
+        this.timeElement = document.createElement("time");
+        document.body.appendChild(this.timeElement);
         this.plane = new Plane();
         this.airports.push(new Airport("1", 2, 65));
         this.airports.push(new Airport("2", 2 + 640, 65));
@@ -161,6 +174,13 @@ var Game = (function () {
     }
     Game.prototype.gameLoop = function () {
         var _this = this;
+        this.scoreElement.innerHTML = "Score: " + this.score;
+        this.timeCounter++;
+        if (this.timeCounter >= 60) {
+            this.time--;
+            this.timeCounter = 0;
+        }
+        this.timeElement.innerHTML = "Time: " + this.time;
         this.plane.update();
         this.boxes.forEach(function (box) {
             if (Utils.collision(_this.plane, box)) {
@@ -189,7 +209,24 @@ var Game = (function () {
                 }
             }
         });
-        requestAnimationFrame(function () { return _this.gameLoop(); });
+        if (this.time <= 0) {
+            this.plane.div.remove();
+            this.boxes.forEach(function (box) {
+                box.name.div.remove();
+                box.div.remove();
+            });
+            this.airports.forEach(function (airport) {
+                airport.name.div.remove();
+                airport.div.remove();
+            });
+            this.timeElement.remove();
+            this.scoreElement.innerHTML = "Time's up!<br>" + this.scoreElement.innerHTML;
+            this.scoreElement.style.left = 'calc(100% / 2 - 100px)';
+            this.scoreElement.style.top = 'calc(100% / 2 - 50px)';
+        }
+        else {
+            requestAnimationFrame(function () { return _this.gameLoop(); });
+        }
     };
     Game.getInstance = function () {
         if (!Game.instance) {
@@ -200,39 +237,41 @@ var Game = (function () {
     return Game;
 }());
 var title;
-var button;
+var start;
 window.addEventListener("load", function () {
     title = document.createElement("title");
-    title.innerHTML = "planeGame!";
     document.body.appendChild(title);
-    button = document.createElement("button");
-    button.innerHTML = "Start!";
-    button.addEventListener("click", function () {
+    start = document.createElement("start");
+    start.addEventListener("click", function () {
         title.remove();
-        button.remove();
+        start.remove();
         Game.getInstance();
     });
-    document.body.appendChild(button);
+    document.body.appendChild(start);
+    TweenLite.to(title, 1, { x: 0, y: 250, ease: Bounce.easeOut });
+    TweenLite.to(start, 1, { x: 0, y: 500, ease: Bounce.easeOut });
 });
 var Name = (function (_super) {
     __extends(Name, _super);
     function Name(parent, name, x, y) {
-        _super.call(this, parent, "name", 20, 50, x, y);
-        this.text = name;
-        this.div.innerHTML = this.text;
+        var _this = _super.call(this, parent, "name", 20, 50, x, y) || this;
+        _this.text = name;
+        _this.div.innerHTML = _this.text;
+        return _this;
     }
     return Name;
 }(GameObject));
 var Plane = (function (_super) {
     __extends(Plane, _super);
     function Plane() {
-        _super.call(this, document.body, "plane", 39, 66, window.innerWidth / 2, window.innerHeight / 2);
-        this.speed = 5;
-        this.angle = 0;
-        this.keyState = {};
-        this.behavior = new Empty(this);
-        window.addEventListener('keydown', this.KeyDown.bind(this));
-        window.addEventListener('keyup', this.KeyUp.bind(this));
+        var _this = _super.call(this, document.body, "plane", 39, 66, window.innerWidth / 2, window.innerHeight / 2) || this;
+        _this.speed = 5;
+        _this.angle = 0;
+        _this.keyState = {};
+        _this.behavior = new Empty(_this);
+        window.addEventListener('keydown', _this.KeyDown.bind(_this));
+        window.addEventListener('keyup', _this.KeyUp.bind(_this));
+        return _this;
     }
     Plane.prototype.KeyDown = function (e) {
         this.keyState[e.keyCode || e.which] = true;
