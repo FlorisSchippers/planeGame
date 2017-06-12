@@ -1,13 +1,8 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var GameObject = (function () {
     function GameObject(parent, name, width, height, x, y) {
         this.elementname = name;
@@ -31,10 +26,9 @@ var GameObject = (function () {
 var Airport = (function (_super) {
     __extends(Airport, _super);
     function Airport(name, x, y) {
-        var _this = _super.call(this, document.body, "airport", 0, 0, x, y) || this;
-        _this.stage = 0;
-        _this.name = new Name(document.body, name, x + 275, y + 125);
-        return _this;
+        _super.call(this, document.body, "airport", 0, 0, x, y);
+        this.stage = 0;
+        this.name = new Name(document.body, name, x + 275, y + 125);
     }
     Airport.prototype.upgrade = function () {
         if (this.stage != 5) {
@@ -78,10 +72,9 @@ var Airport = (function (_super) {
 var Box = (function (_super) {
     __extends(Box, _super);
     function Box(name, randomAirport) {
-        var _this = _super.call(this, document.body, "box", 49, 31, randomAirport.x + 237, randomAirport.y + 170) || this;
-        _this.randomAirport = randomAirport;
-        _this.name = new Name(document.body, name, _this.randomAirport.x + 250, _this.randomAirport.y + 165);
-        return _this;
+        _super.call(this, document.body, "box", 49, 31, randomAirport.x + 237, randomAirport.y + 170);
+        this.randomAirport = randomAirport;
+        this.name = new Name(document.body, name, this.randomAirport.x + 250, this.randomAirport.y + 165);
     }
     return Box;
 }(GameObject));
@@ -90,20 +83,19 @@ var Carrying = (function () {
         this.plane = plane;
         this.plane.div.style.backgroundImage = "url('images/fullplane.png')";
         this.box = box;
-        console.log(this.box.name.text);
     }
     Carrying.prototype.move = function () {
-        if (this.plane.keyState[87]) {
-            this.plane.speed = 5;
+        if (this.plane.keyState[Enums.Keys.W]) {
+            this.plane.speed = 9;
         }
         else {
-            this.plane.speed = 2.5;
+            this.plane.speed = 4;
         }
-        if (this.plane.keyState[68]) {
-            this.plane.angle += 2.5;
+        if (this.plane.keyState[Enums.Keys.A]) {
+            this.plane.angle -= 4;
         }
-        if (this.plane.keyState[65]) {
-            this.plane.angle -= 2.5;
+        if (this.plane.keyState[Enums.Keys.D]) {
+            this.plane.angle += 4;
         }
         this.plane.x += this.plane.speed * Math.cos(this.plane.angle * Math.PI / 180);
         this.plane.y += this.plane.speed * Math.sin(this.plane.angle * Math.PI / 180);
@@ -116,23 +108,32 @@ var Empty = (function () {
         this.plane.div.style.backgroundImage = "url('images/plane.png')";
     }
     Empty.prototype.move = function () {
-        if (this.plane.keyState[87]) {
+        if (this.plane.keyState[Enums.Keys.W]) {
             this.plane.speed = 10;
         }
         else {
             this.plane.speed = 5;
         }
-        if (this.plane.keyState[68]) {
-            this.plane.angle += 5;
-        }
-        if (this.plane.keyState[65]) {
+        if (this.plane.keyState[Enums.Keys.A]) {
             this.plane.angle -= 5;
+        }
+        if (this.plane.keyState[Enums.Keys.D]) {
+            this.plane.angle += 5;
         }
         this.plane.x += this.plane.speed * Math.cos(this.plane.angle * Math.PI / 180);
         this.plane.y += this.plane.speed * Math.sin(this.plane.angle * Math.PI / 180);
     };
     return Empty;
 }());
+var Enums;
+(function (Enums) {
+    (function (Keys) {
+        Keys[Keys["W"] = 87] = "W";
+        Keys[Keys["A"] = 65] = "A";
+        Keys[Keys["D"] = 68] = "D";
+    })(Enums.Keys || (Enums.Keys = {}));
+    var Keys = Enums.Keys;
+})(Enums || (Enums = {}));
 var Game = (function () {
     function Game() {
         var _this = this;
@@ -150,7 +151,12 @@ var Game = (function () {
         this.airports.push(new Airport("8", 2 + 1280, 65 + 448));
         this.airports.push(new Airport("9", 2 + 320, 65 + 672));
         this.airports.push(new Airport("10", 2 + 960, 65 + 672));
-        this.boxes.push(new Box(Math.ceil(Math.random() * 10) + "", this.airports[Math.floor(Math.random() * this.airports.length)]));
+        var objectiveAirport = Math.floor(Math.random() * 10) + 1 + "";
+        var spawnAirport = this.airports[Math.floor(Math.random() * this.airports.length)];
+        while (objectiveAirport == spawnAirport.name.text) {
+            spawnAirport = this.airports[Math.floor(Math.random() * this.airports.length)];
+        }
+        this.boxes.push(new Box(objectiveAirport, spawnAirport));
         requestAnimationFrame(function () { return _this.gameLoop(); });
     }
     Game.prototype.gameLoop = function () {
@@ -173,13 +179,12 @@ var Game = (function () {
                         _this.plane.behavior = new Empty(_this.plane);
                         airport.upgrade();
                         _this.score++;
-                        var randomAirport = _this.airports[Math.floor(Math.random() * _this.airports.length)];
-                        console.log(airport);
-                        console.log(randomAirport);
-                        while (airport == randomAirport) {
-                            randomAirport = _this.airports[Math.floor(Math.random() * _this.airports.length)];
+                        var objectiveAirport = Math.floor(Math.random() * 10) + 1 + "";
+                        var spawnAirport = _this.airports[Math.floor(Math.random() * _this.airports.length)];
+                        while (objectiveAirport == spawnAirport.name.text) {
+                            spawnAirport = _this.airports[Math.floor(Math.random() * _this.airports.length)];
                         }
-                        _this.boxes.push(new Box(Math.ceil(Math.random() * 10) + "", randomAirport));
+                        _this.boxes.push(new Box(objectiveAirport, spawnAirport));
                     }
                 }
             }
@@ -194,30 +199,40 @@ var Game = (function () {
     };
     return Game;
 }());
+var title;
+var button;
 window.addEventListener("load", function () {
-    Game.getInstance();
+    title = document.createElement("title");
+    title.innerHTML = "planeGame!";
+    document.body.appendChild(title);
+    button = document.createElement("button");
+    button.innerHTML = "Start!";
+    button.addEventListener("click", function () {
+        title.remove();
+        button.remove();
+        Game.getInstance();
+    });
+    document.body.appendChild(button);
 });
 var Name = (function (_super) {
     __extends(Name, _super);
     function Name(parent, name, x, y) {
-        var _this = _super.call(this, parent, "name", 20, 50, x, y) || this;
-        _this.text = name;
-        _this.div.innerHTML = _this.text;
-        return _this;
+        _super.call(this, parent, "name", 20, 50, x, y);
+        this.text = name;
+        this.div.innerHTML = this.text;
     }
     return Name;
 }(GameObject));
 var Plane = (function (_super) {
     __extends(Plane, _super);
     function Plane() {
-        var _this = _super.call(this, document.body, "plane", 39, 66, window.innerWidth / 2, window.innerHeight / 2) || this;
-        _this.speed = 5;
-        _this.angle = 0;
-        _this.keyState = {};
-        _this.behavior = new Empty(_this);
-        window.addEventListener('keydown', _this.KeyDown.bind(_this));
-        window.addEventListener('keyup', _this.KeyUp.bind(_this));
-        return _this;
+        _super.call(this, document.body, "plane", 39, 66, window.innerWidth / 2, window.innerHeight / 2);
+        this.speed = 5;
+        this.angle = 0;
+        this.keyState = {};
+        this.behavior = new Empty(this);
+        window.addEventListener('keydown', this.KeyDown.bind(this));
+        window.addEventListener('keyup', this.KeyUp.bind(this));
     }
     Plane.prototype.KeyDown = function (e) {
         this.keyState[e.keyCode || e.which] = true;

@@ -11,6 +11,18 @@ body * {
     padding: 0px;
 }
 
+title {
+    width:664px;
+    height:151px;
+    background-image: url('../images/title.png');
+}
+
+button {
+    width:345px;
+    height:131px;
+    background-image: url('../images/button.png');
+}
+
 airport {
     background-image: url(../images/airport0.png);
     width: 379px;
