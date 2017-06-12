@@ -90,6 +90,7 @@ var Box = (function (_super) {
     Box.prototype.notify = function () {
         this.name.div.remove();
         this.div.remove();
+        this.plane.unsubscribe();
     };
     return Box;
 }(GameObject));
@@ -287,8 +288,7 @@ var Plane = (function (_super) {
         console.log(o);
         this.observers.push(o);
     };
-    Plane.prototype.unsubscribe = function (o) {
-        this.observers.splice(0, 1);
+    Plane.prototype.unsubscribe = function () {
     };
     Plane.prototype.KeyDown = function (e) {
         this.keyState[e.keyCode || e.which] = true;

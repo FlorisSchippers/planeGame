@@ -19,5 +19,6 @@ class Box extends GameObject implements Observer {
     public notify(): void {
         this.name.div.remove();
         this.div.remove();
+        this.plane.unsubscribe();
     }
 }

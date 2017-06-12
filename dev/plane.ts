@@ -20,8 +20,8 @@ class Plane extends GameObject implements Observable {
         this.observers.push(o);
     }
 
-    public unsubscribe(o: Observer): void {
-        this.observers.splice(0, 1);
+    public unsubscribe(): void {
+        // ?
     }
 
     private KeyDown(e: KeyboardEvent): void {
