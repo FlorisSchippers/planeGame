@@ -77,12 +77,20 @@ var Airport = (function (_super) {
 }(GameObject));
 var Box = (function (_super) {
     __extends(Box, _super);
-    function Box(name, randomAirport) {
+    function Box(plane, name, randomAirport) {
         var _this = _super.call(this, document.body, "box", 49, 31, randomAirport.x + 237, randomAirport.y + 170) || this;
         _this.randomAirport = randomAirport;
         _this.name = new Name(document.body, name, _this.randomAirport.x + 250, _this.randomAirport.y + 165);
+        var game = Game.getInstance;
+        _this.plane = plane;
+        console.log(_this);
+        plane.subscribe(_this);
         return _this;
     }
+    Box.prototype.notify = function () {
+        this.name.div.remove();
+        this.div.remove();
+    };
     return Box;
 }(GameObject));
 var Carrying = (function () {
@@ -169,7 +177,7 @@ var Game = (function () {
         while (objectiveAirport == spawnAirport.name.text) {
             spawnAirport = this.airports[Math.floor(Math.random() * this.airports.length)];
         }
-        this.boxes.push(new Box(objectiveAirport, spawnAirport));
+        this.boxes.push(new Box(this.plane, objectiveAirport, spawnAirport));
         requestAnimationFrame(function () { return _this.gameLoop(); });
     }
     Game.prototype.gameLoop = function () {
@@ -186,8 +194,9 @@ var Game = (function () {
             if (Utils.collision(_this.plane, box)) {
                 if (_this.plane.behavior instanceof Empty) {
                     _this.plane.behavior = new Carrying(_this.plane, box);
-                    box.name.div.remove();
-                    box.div.remove();
+                    _this.plane.observers.forEach(function (observer) {
+                        observer.notify();
+                    });
                     _this.boxes.splice(0, 1);
                 }
             }
@@ -204,7 +213,7 @@ var Game = (function () {
                         while (objectiveAirport == spawnAirport.name.text) {
                             spawnAirport = _this.airports[Math.floor(Math.random() * _this.airports.length)];
                         }
-                        _this.boxes.push(new Box(objectiveAirport, spawnAirport));
+                        _this.boxes.push(new Box(_this.plane, objectiveAirport, spawnAirport));
                     }
                 }
             }
@@ -268,11 +277,19 @@ var Plane = (function (_super) {
         _this.speed = 5;
         _this.angle = 0;
         _this.keyState = {};
+        _this.observers = [];
         _this.behavior = new Empty(_this);
         window.addEventListener('keydown', _this.KeyDown.bind(_this));
         window.addEventListener('keyup', _this.KeyUp.bind(_this));
         return _this;
     }
+    Plane.prototype.subscribe = function (o) {
+        console.log(o);
+        this.observers.push(o);
+    };
+    Plane.prototype.unsubscribe = function (o) {
+        this.observers.splice(0, 1);
+    };
     Plane.prototype.KeyDown = function (e) {
         this.keyState[e.keyCode || e.which] = true;
     };

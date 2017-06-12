@@ -15,8 +15,8 @@ class Game {
         document.body.appendChild(this.scoreElement);
         this.timeElement = document.createElement("time");
         document.body.appendChild(this.timeElement);
-        // Bevolk het scherm met meest efficient geplaatste vliegvelden (tile: 64x32)
         this.plane = new Plane();
+        // Bevolk het scherm met meest efficient geplaatste vliegvelden (tile: 64x32)
         this.airports.push(new Airport("1", 2, 65));
         this.airports.push(new Airport("2", 2 + 640, 65));
         this.airports.push(new Airport("3", 2 + 1280, 65));
@@ -32,7 +32,7 @@ class Game {
         while (objectiveAirport == spawnAirport.name.text) {
             spawnAirport = this.airports[Math.floor(Math.random() * this.airports.length)];
         }
-        this.boxes.push(new Box(objectiveAirport, spawnAirport));
+        this.boxes.push(new Box(this.plane, objectiveAirport, spawnAirport));
         requestAnimationFrame(() => this.gameLoop());
     }
 
@@ -49,8 +49,9 @@ class Game {
             if (Utils.collision(this.plane, box)) {
                 if (this.plane.behavior instanceof Empty) {
                     this.plane.behavior = new Carrying(this.plane, box);
-                    box.name.div.remove();
-                    box.div.remove();
+                    this.plane.observers.forEach(observer => {
+                        observer.notify();
+                    });
                     this.boxes.splice(0, 1);
                 }
             }
@@ -67,7 +68,7 @@ class Game {
                         while (objectiveAirport == spawnAirport.name.text) {
                             spawnAirport = this.airports[Math.floor(Math.random() * this.airports.length)];
                         }
-                        this.boxes.push(new Box(objectiveAirport, spawnAirport));
+                        this.boxes.push(new Box(this.plane, objectiveAirport, spawnAirport));
                     }
                 }
             }
