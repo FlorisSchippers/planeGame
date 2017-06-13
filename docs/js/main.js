@@ -1,13 +1,8 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var GameObject = (function () {
     function GameObject(parent, name, width, height, x, y) {
         this.elementname = name;
@@ -31,10 +26,9 @@ var GameObject = (function () {
 var Airport = (function (_super) {
     __extends(Airport, _super);
     function Airport(name, x, y) {
-        var _this = _super.call(this, document.body, "airport", 0, 0, x, y) || this;
-        _this.stage = 0;
-        _this.name = new Name(document.body, name, x + 275, y + 125);
-        return _this;
+        _super.call(this, document.body, "airport", 0, 0, x, y);
+        this.stage = 0;
+        this.name = new Name(document.body, name, x + 275, y + 125);
     }
     Airport.prototype.upgrade = function () {
         if (this.stage != 5) {
@@ -78,14 +72,13 @@ var Airport = (function (_super) {
 var Box = (function (_super) {
     __extends(Box, _super);
     function Box(plane, name, randomAirport) {
-        var _this = _super.call(this, document.body, "box", 49, 31, randomAirport.x + 237, randomAirport.y + 170) || this;
-        _this.randomAirport = randomAirport;
-        _this.name = new Name(document.body, name, _this.randomAirport.x + 250, _this.randomAirport.y + 165);
+        _super.call(this, document.body, "box", 49, 31, randomAirport.x + 237, randomAirport.y + 170);
+        this.randomAirport = randomAirport;
+        this.name = new Name(document.body, name, this.randomAirport.x + 250, this.randomAirport.y + 165);
         var game = Game.getInstance;
-        _this.plane = plane;
-        console.log(_this);
-        plane.subscribe(_this);
-        return _this;
+        this.plane = plane;
+        console.log(this);
+        plane.subscribe(this);
     }
     Box.prototype.notify = function () {
         this.name.div.remove();
@@ -143,12 +136,12 @@ var Empty = (function () {
 }());
 var Enums;
 (function (Enums) {
-    var Keys;
     (function (Keys) {
         Keys[Keys["W"] = 87] = "W";
         Keys[Keys["A"] = 65] = "A";
         Keys[Keys["D"] = 68] = "D";
-    })(Keys = Enums.Keys || (Enums.Keys = {}));
+    })(Enums.Keys || (Enums.Keys = {}));
+    var Keys = Enums.Keys;
 })(Enums || (Enums = {}));
 var Game = (function () {
     function Game() {
@@ -264,25 +257,23 @@ window.addEventListener("load", function () {
 var Name = (function (_super) {
     __extends(Name, _super);
     function Name(parent, name, x, y) {
-        var _this = _super.call(this, parent, "name", 20, 50, x, y) || this;
-        _this.text = name;
-        _this.div.innerHTML = _this.text;
-        return _this;
+        _super.call(this, parent, "name", 20, 50, x, y);
+        this.text = name;
+        this.div.innerHTML = this.text;
     }
     return Name;
 }(GameObject));
 var Plane = (function (_super) {
     __extends(Plane, _super);
     function Plane() {
-        var _this = _super.call(this, document.body, "plane", 39, 66, window.innerWidth / 2, window.innerHeight / 2) || this;
-        _this.speed = 5;
-        _this.angle = 0;
-        _this.keyState = {};
-        _this.observers = [];
-        _this.behavior = new Empty(_this);
-        window.addEventListener('keydown', _this.KeyDown.bind(_this));
-        window.addEventListener('keyup', _this.KeyUp.bind(_this));
-        return _this;
+        _super.call(this, document.body, "plane", 39, 66, window.innerWidth / 2, window.innerHeight / 2);
+        this.speed = 5;
+        this.angle = 0;
+        this.keyState = {};
+        this.observers = [];
+        this.behavior = new Empty(this);
+        window.addEventListener('keydown', this.KeyDown.bind(this));
+        window.addEventListener('keyup', this.KeyUp.bind(this));
     }
     Plane.prototype.subscribe = function (o) {
         console.log(o);
