@@ -2,7 +2,7 @@
 
 
 ## Instructies
-- Typescript game waar gebruik gemaakt is van encapsulation, composition, inheritance, polymorphisme, een singleton, een observable met observers, strategy patterns, een interface, een static utils class, een namespace, enumerations en een library dat runt via een gameloop
+- Typescript game waar gebruik gemaakt is van encapsulation, composition, inheritance, polymorphisme, een singleton, een observable met observers, strategy patterns, een interface, een abstract utils class, een static collision method, een namespace, enumerations en een library dat runt via een gameloop
 - Assesser kan een fork maken en deze pullen om lokaal de ts files te compilen naar js
 - Vervolgens zal de gecompilede js te vinden zijn in de docs folder om te runnen in een localhost browser
 
@@ -19,7 +19,8 @@
 - Observers: 
 - Strategy patterns: De Empty en Carrying classes volgen de Behavior interface met specifieke gamestate logica
 - Interface: De Behavior interface waar de Empty en Carrying gedragen aan voldoen
-- Static utils class: De Utils class heeft een static collision() method voor collision detection
+- Abstract: De Utils class is abstract omdat er geen instance van gemaakt mag worden
+- Static: De Utils class heeft een static collision() method voor collision detection
 - Namespace: De enumerations heb ik in een namespace geplaatst zodat deze altijd duidelijk aan te roepen zijn
 - Enumerations: Bevat een lijstje keyboard inputs zodat ik deze juist aan kan roepen met een custom label
 - Library: Ik heb gebruik gemaakt van TweenLite voor animaties op het titelscherm
