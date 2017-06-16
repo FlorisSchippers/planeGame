@@ -14,9 +14,9 @@
 
 ## Uitwerking
 
-- Encapsulation, composition, inheritance, polymorphisme: De game is opgebouwd met verschillende DOM elementen die allen overerven van de gameObject class, appended aan de body
+- Encapsulation, composition, inheritance & polymorphisme: De game is opgebouwd met verschillende DOM elementen die allen overerven van de gameObject class, appended aan de body
 - Singleton: Van de game wordt een instance gemaakt die aan te spreken is in de Game class met getInstance()
-- Observers: 
+- Observer: Het vliegtuig implementeert de Observable interface en de box implementeert de Observer interface, op deze manier zorgt de box er zelf voor dat het weg gaat wanneer het opgepakt wordt
 - Strategy patterns: De Empty en Carrying classes volgen de Behavior interface met specifieke gamestate logica
 - Interface: De Behavior interface waar de Empty en Carrying gedragen aan voldoen
 - Abstract: De Utils class is abstract omdat er geen instance van gemaakt mag worden
@@ -50,14 +50,3 @@ Het project is zeker voldoende. Alle eisen zijn goed toegepast en uitgewerkt
 - Een onnodige if statement verwijderd
 - Ghost box probleem (Nadat de box weg was bleef hij op te pakken) is opgelost
 - Er kan nu geen box meer spawnen die bestemt is voor het vliegveld waar hij spawned (Poging tot gedaan, later volledig opgelost)
-
-
-## Peer review week 7
-
-### Beoordeling
-
-.
-
-### Verbeteringen
-
-.
